@@ -5,7 +5,7 @@ from astral import Astral
 import pytz
 
 
-ASTRAL_CITY_NAME_SEATTLE = 'seattle'
+ASTRAL_CITY_NAME_SEATTLE = 'minneapolis'
 
 def get_timezone(city):
     return pytz.timezone(Astral()[city].timezone)
