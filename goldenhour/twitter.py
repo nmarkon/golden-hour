@@ -9,10 +9,10 @@ from twitter.twitter_utils import parse_media_file
 
 def load_credentials():
     return {
-        'consumer_key': os.getenv("CONSUMER_KEY"),
-        'consumer_secret': os.getenv("CONSUMER_SECRET"),
-        'access_token_key': os.getenv("ACCESS_TOKEN_KEY"),
-        'access_token_secret': os.getenv("ACCESS_TOKEN_SECRET"),
+        'consumer_key': os.getenv("TWITTER_CONSUMER_KEY"),
+        'consumer_secret': os.getenv("TWITTER_CONSUMER_SECRET"),
+        'access_token_key': os.getenv("TWITTER_ACCESS_TOKEN_KEY"),
+        'access_token_secret': os.getenv("TWITTER_ACCESS_TOKEN_SECRET"),
     }
 
 

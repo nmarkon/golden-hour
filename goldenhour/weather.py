@@ -14,7 +14,6 @@ def get_status_text(forecast, sunset_time):
     hourly = forecast['hourly']
     units = forecast['flags']['units']
     currently = forecast['currently']
-    daily = forecast['daily']
 
     return '\n'.join(
         filter(None, [
@@ -91,8 +90,8 @@ def wind(currently):
         )
 
 def visibility(currently):
-    vis = currently.get('visibility', 100)
-    if vis < 5:
+    vis = currently.get('visibility', -1)
+    if vis < 5 and vis >= 0:
         return '🌁 {} miles of visibility'.format(vis)
 
 def nearest_storm(currently):

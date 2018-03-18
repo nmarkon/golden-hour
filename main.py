@@ -9,10 +9,17 @@ from pathlib import Path
 
 from goldenhour import sunset, timelapse, twitter, weather
 
+def calc_duration(duration, minutes_before_start, minutes_after_end):
+    if duration:
+        return duration
+
+    event_duration = (sunset.get_end_time(minutes_after_end) - sunset.get_start_time(minutes_before_start)).total_seconds()
+
+    return event_duration
+
 def calculate_timelapse_duration(duration, interval, photo_display_rate=30.0):
     # return number of seconds
     return float(duration) / interval / photo_display_rate
-
 
 def get_random_status_text():
     return random.choice([
@@ -58,12 +65,20 @@ def main():
         default=8,
         help='time between captured photos',
     )
-    parser.add_argument('--start-before-sunset',
+    parser.add_argument('--minutes-before-start',
         metavar='minutes',
         type=int,
         default=None,
-        help='number of minutes before sunset to start timelapse',
+        help='number of minutes before start event to start timelapse',
     )
+
+    parser.add_argument('--minutes-after-end',
+        metavar='minutes',
+        type=int,
+        default=None,
+        help='number of minutes after end event to end timelapse',
+    )
+
     parser.add_argument('--post-to-twitter',
         action='store_true',
         default=False,
@@ -85,12 +100,17 @@ def main():
         os.mkdir(output_dir)
 
     timelapse_filename = get_timelapse_filename(output_dir)
+    duration = args.duration or os.getenv('DURATION')
+    duration = calc_duration(duration, args.minutes_before_start, args.minutes_after_end)
+    
+    video_duration = calculate_timelapse_duration(duration, args.interval)
 
+    print('DURATION: {} video duration: {}'.format(duration/60, video_duration/60) )
     if args.post_to_twitter:
         print('verifying twitter credentials')
         twitter.verify_credentials()
         # check the expected length of the video to make sure it's within twitter's rules
-        video_duration = calculate_timelapse_duration(args.duration, args.interval)
+        
         print('estimated video length: {} seconds'.format(video_duration))
         if video_duration < 5.0:
             print('Error: Timelapse video will be too short to upload to Twitter (min 5 seconds)')
@@ -99,18 +119,18 @@ def main():
             print('Error: Timelapse video will be too long to upload to Twitter (max 140 seconds)')
             exit(2)
 
-    if args.start_before_sunset is not None:
-        sunset.wait_for_sunset(args.start_before_sunset)
+    if args.minutes_before_start is not None:
+        sunset.wait_for_start(args.minutes_before_start, args.minutes_after_end)
 
     if not args.skip_timelapse:
-        timelapse.create_timelapse(args.duration, args.interval, timelapse_filename)
+        timelapse.create_timelapse(duration, args.interval, timelapse_filename)
 
     darksky_key = args.darksky_key or os.getenv("DARKSKY_KEY")
     
     if darksky_key:
         
         geoCoordinates = float(os.getenv("LATITUDE")), float(os.getenv("LONGITUDE"))
-        sunset_time = sunset.get_today_sunset_time(sunset.ASTRAL_CITY_NAME_SEATTLE)
+        sunset_time = sunset.get_sunset_time()
 
         forecast = weather.get_sunset_forecast(darksky_key, sunset_time, geoCoordinates)
         status_text = weather.get_status_text(forecast, sunset_time)
