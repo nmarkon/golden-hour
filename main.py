@@ -48,7 +48,7 @@ def main():
     parser.add_argument('-d','--duration',
         metavar='seconds',
         type=int,
-        default=7200, # 2 hours
+        default=os.getenv('DURATION'), # 2 hours 7200
         help='duration of timelapse capture',
     )
     # TODO might want to enforce minimum of 3 if using raspi cam
@@ -83,7 +83,7 @@ def main():
 
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)
-        
+
     timelapse_filename = get_timelapse_filename(output_dir)
 
     if args.post_to_twitter:
@@ -105,12 +105,14 @@ def main():
     if not args.skip_timelapse:
         timelapse.create_timelapse(args.duration, args.interval, timelapse_filename)
 
-    if args.darksky_key:
-        darksky_key = args.darksky_key
-        SEATTLE = 47.602, -122.332
+    darksky_key = args.darksky_key or os.getenv("DARKSKY_KEY")
+    
+    if darksky_key:
+        
+        geoCoordinates = float(os.getenv("LATITUDE")), float(os.getenv("LONGITUDE"))
         sunset_time = sunset.get_today_sunset_time(sunset.ASTRAL_CITY_NAME_SEATTLE)
 
-        forecast = weather.get_sunset_forecast(darksky_key, sunset_time, SEATTLE)
+        forecast = weather.get_sunset_forecast(darksky_key, sunset_time, geoCoordinates)
         status_text = weather.get_status_text(forecast, sunset_time)
     else:
         status_text = get_random_status_text()

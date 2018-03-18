@@ -3,7 +3,6 @@ from random import choice
 
 from darksky import forecast as get_forecast
 
-
 def get_sunset_forecast(darksky_key, sunset_time, lat_long):
     # Get the forecast from *just before* sunset to avoid night-themed emoji
     just_before_sunset_time = sunset_time - datetime.timedelta(minutes=10)
@@ -15,6 +14,7 @@ def get_status_text(forecast, sunset_time):
     hourly = forecast['hourly']
     units = forecast['flags']['units']
     currently = forecast['currently']
+    daily = forecast['daily']
 
     return '\n'.join(
         filter(None, [
@@ -91,7 +91,7 @@ def wind(currently):
         )
 
 def visibility(currently):
-    vis = currently['visibility']
+    vis = currently.get('visibility', 100)
     if vis < 5:
         return '🌁 {} miles of visibility'.format(vis)
 
@@ -180,6 +180,6 @@ def get_bearing(degrees, short = False):
     span = 360.0 / count
 
     # Use modulo to "round" `16` to `0`
-    index = round(degrees / span) % count
+    index = int(round(degrees / span) % count)
 
     return directions[index]

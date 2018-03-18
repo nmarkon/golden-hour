@@ -3,17 +3,16 @@ from __future__ import absolute_import
 import argparse
 import twitter
 import yaml
+import os
 
 from twitter.twitter_utils import parse_media_file
 
 def load_credentials():
-    with open('twitter_secrets.yaml') as twitter_conf_file:
-        conf = yaml.load(twitter_conf_file.read())
     return {
-        'consumer_key': conf['consumer_key'],
-        'consumer_secret': conf['consumer_secret'],
-        'access_token_key': conf['access_token_key'],
-        'access_token_secret': conf['access_token_secret'],
+        'consumer_key': os.getenv("CONSUMER_KEY"),
+        'consumer_secret': os.getenv("CONSUMER_SECRET"),
+        'access_token_key': os.getenv("ACCESS_TOKEN_KEY"),
+        'access_token_secret': os.getenv("ACCESS_TOKEN_SECRET"),
     }
 
 

@@ -10,7 +10,6 @@ ASTRAL_CITY_NAME_SEATTLE = 'minneapolis'
 def get_timezone(city):
     return pytz.timezone(Astral()[city].timezone)
 
-
 def get_today_sunset_time(city, today=None):
     if today is None:
         local_timezone = get_timezone(city)
