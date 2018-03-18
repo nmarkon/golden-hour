@@ -4,6 +4,8 @@ import argparse
 import datetime
 import os
 import random
+from dotenv import load_dotenv
+from pathlib import Path 
 
 from goldenhour import sunset, timelapse, twitter, weather
 
@@ -38,15 +40,19 @@ def get_timelapse_filename(output_dir):
 
 
 def main():
+    
+    env_path = Path('.') / '.env'
+    load_dotenv(dotenv_path=env_path) 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--duration',
+
+    parser.add_argument('-d','--duration',
         metavar='seconds',
         type=int,
         default=7200, # 2 hours
         help='duration of timelapse capture',
     )
     # TODO might want to enforce minimum of 3 if using raspi cam
-    parser.add_argument('--interval',
+    parser.add_argument('-i','--interval',
         metavar='seconds',
         type=int,
         default=8,
@@ -73,9 +79,11 @@ def main():
     )
     args = parser.parse_args()
 
-    output_dir = 'output'
+    output_dir = os.getenv("OUTPUT_DIR")
+
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)
+        
     timelapse_filename = get_timelapse_filename(output_dir)
 
     if args.post_to_twitter:
@@ -87,8 +95,8 @@ def main():
         if video_duration < 5.0:
             print('Error: Timelapse video will be too short to upload to Twitter (min 5 seconds)')
             exit(1)
-        if video_duration > 30.0:
-            print('Error: Timelapse video will be too long to upload to Twitter (max 30 seconds)')
+        if video_duration > 140.0:
+            print('Error: Timelapse video will be too long to upload to Twitter (max 140 seconds)')
             exit(2)
 
     if args.start_before_sunset is not None:

@@ -2,11 +2,14 @@ import platform
 import shutil
 import tempfile
 
-from .ffmpeg import compile_video
-if platform.system() == 'Darwin':
-    from .osx import capture
-else:
-    from .pi import capture
+from .ffmpeg import compile_video, capture
+
+#if platform.system() == 'Darwin':
+#    from .osx import capture
+#elif platform.system() == 'Windows':
+#    from .windows import capture
+#else:
+#    from .pi import capture
 
 
 def create_timelapse(duration, interval, filename, persistent_photos_dir=None):
