@@ -2,7 +2,6 @@ from __future__ import absolute_import
 
 import argparse
 import twitter
-import yaml
 import os
 
 from twitter.twitter_utils import parse_media_file
