@@ -13,7 +13,13 @@ def calc_duration(duration, minutes_before_start, minutes_after_end):
     if duration:
         return duration
 
-    event_duration = (sunset.get_end_time(minutes_after_end) - sunset.get_start_time(minutes_before_start)).total_seconds()
+    startTime = sunset.get_start_time(minutes_before_start)
+
+    now = datetime.datetime.now()
+    if now > startTime:
+        startTime = now
+
+    event_duration = (sunset.get_end_time(minutes_after_end) - startTime).total_seconds()
 
     return event_duration
 
