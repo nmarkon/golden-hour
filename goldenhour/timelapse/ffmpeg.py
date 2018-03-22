@@ -37,7 +37,7 @@ def compile_video(photos_dir, output_filename, photos_per_second=30):
         photos_per_second=photos_per_second,
     ))
     # TODO ensure output_filename ends with .mp4
-    photos_pattern = '{}/image%d.png'.format(photos_dir)
+    photos_pattern = '{}/image%05d.png'.format(photos_dir)
     # TODO check exit status
     subprocess.call([
         'ffmpeg',
