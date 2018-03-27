@@ -7,7 +7,7 @@ import random
 from dotenv import load_dotenv
 from pathlib import Path 
 
-from goldenhour import sunset, timelapse, twitter, weather
+from goldenhour import sunset, timelapse, twitter, weather, twitterAsync
 
 def calc_duration(duration, minutes_before_start, minutes_after_end):
     if duration:
@@ -140,7 +140,12 @@ def main():
     print(status_text)
 
     if args.post_to_twitter and not args.skip_timelapse:
-        twitter.post_update(status_text, media=timelapse_filename)
+        #twitter.post_update(status_text, media=timelapse_filename)
+        videoTweet = twitterAsync.VideoTweet(timelapse_filename)
+        videoTweet.upload_init()
+        videoTweet.upload_append()
+        videoTweet.upload_finalize()
+        videoTweet.tweet(status_text)
 
     print('done!')
 
