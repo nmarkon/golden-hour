@@ -16,6 +16,12 @@ def getAstralObject():
 
     return l
 
+def get_now():
+    astral = getAstralObject()
+    tz = pytz.timezone(astral.timezone)
+    return datetime.datetime.now(tz)
+    
+
 def get_timezone(astral):
     return pytz.timezone(astral.timezone)
 

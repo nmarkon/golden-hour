@@ -15,7 +15,7 @@ def calc_duration(duration, minutes_before_start, minutes_after_end):
 
     startTime = sunset.get_start_time(minutes_before_start)
 
-    now = datetime.datetime.now()
+    now = sunset.get_now()
     if now > startTime:
         startTime = now
 
