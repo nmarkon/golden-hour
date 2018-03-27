@@ -16,6 +16,12 @@ def getAstralObject():
 
     return l
 
+def get_now():
+    astral = getAstralObject()
+    tz = pytz.timezone(astral.timezone)
+    return datetime.datetime.now(tz)
+    
+
 def get_timezone(astral):
     return pytz.timezone(astral.timezone)
 
@@ -60,7 +66,8 @@ def get_seconds_until(earlier_time, later_time):
 
 def wait_for_start(minutes_before=0, minutes_after=0):
     city = os.getenv('ASTRAL_CITY')
-    local_timezone = os.getenv('ASTRAL_TIMEZONE') or get_timezone(city)
+    astral = getAstralObject()
+    local_timezone = get_timezone(astral)
     
     start_time = get_start_time(minutes_before)
     end_time = get_end_time(minutes_after)
@@ -75,6 +82,9 @@ def wait_for_start(minutes_before=0, minutes_after=0):
         return
 
     sleep_seconds = get_seconds_until(now, start_time)
+    if sleep_seconds < 0:
+        return
+	
     # TODO print wait time in hours and seconds
     print('waiting {} seconds to start {} minutes before start event'.format(sleep_seconds, minutes_before))
     time.sleep(sleep_seconds)
