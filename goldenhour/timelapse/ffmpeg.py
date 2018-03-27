@@ -45,7 +45,7 @@ def compile_video(photos_dir, output_filename, photos_per_second=30):
         '-framerate', str(photos_per_second),
         '-i', photos_pattern,
         '-c:v', 'libx264',
-        '-r', '30',
+        #'-r', '30',
         '-pix_fmt', 'yuv420p',
         output_filename,
     ])
