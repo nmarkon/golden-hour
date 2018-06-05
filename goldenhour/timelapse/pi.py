@@ -17,8 +17,8 @@ def capture(output_dir, duration, interval):
         '-t', str(duration * 1000),
         '-tl', str(interval * 1000),
         '-n', # don't try to show a preview window
-        '-w', '1280',
-        '-h', '720',
+        '-w', '1920',
+        '-h', '1080',
         #'--rotation', '180', # set this to correct for camera orientation
         '--quality', '100',
         # '--verbose',

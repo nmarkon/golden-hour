@@ -45,7 +45,7 @@ def get_sunset_time():
 def get_start_time(minutes_before):
 
     event_start = get_time_for_event(os.getenv('ASTRAL_START_EVENT'))
-
+    print('start_event at {}'.format(event_start))
     minutes_before = minutes_before or int(os.getenv('MINUTES_BEFORE_START')) or 0
 
     start =  event_start - datetime.timedelta(minutes=minutes_before)
@@ -71,13 +71,13 @@ def wait_for_start(minutes_before=0, minutes_after=0):
     
     start_time = get_start_time(minutes_before)
     end_time = get_end_time(minutes_after)
-    now = datetime.datetime.now(local_timezone)
+    now = get_now()
 
     if  now > end_time:
         print('ERROR: too late to start for today\'s sunset')
         exit()
     
-    if start_time > now:
+    if  now > start_time:
         print('not sleeping')
         return
 

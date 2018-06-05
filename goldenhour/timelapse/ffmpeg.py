@@ -47,5 +47,6 @@ def compile_video(photos_dir, output_filename, photos_per_second=30):
         '-c:v', 'libx264',
         #'-r', '30',
         '-pix_fmt', 'yuv420p',
+	#'-s', '1280x720',
         output_filename,
     ])
